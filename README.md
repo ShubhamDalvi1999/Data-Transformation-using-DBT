@@ -1,6 +1,7 @@
 # Airflow DBT Project
 
 A production-ready data pipeline using Apache Airflow and DBT for processing CFTC reports.
+![image](https://github.com/user-attachments/assets/fc4842b6-7634-4514-a886-3eccc6f31022)
 
 ## Project Overview
 
