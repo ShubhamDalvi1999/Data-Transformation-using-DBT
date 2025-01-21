@@ -1,6 +1,53 @@
+<h2 align="center">
+  Welcome to Azure Data Processing Project!
+  <img src="https://media.giphy.com/media/hvRJCLFzcasrR4ia7z/giphy.gif" width="28">
+</h2>
+<!-- Intro  -->
+<h3 align="center">
+        <samp>&gt; Hey There!, I am
+                <b><a target="_blank" href="https://yourwebsite.com">Shubham Dalvi</a></b>
+        </samp>
+</h3>
+
+<p align="center"> 
+  <samp>
+    <br>
+    「 I am a data engineer with a passion for big data, distributed computing, cloud solutions, and data visualization 」
+    <br>
+    <br>
+  </samp>
+</p>
+
+<div align="center">
+<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=1000&random=false&width=800&lines=Azure+Databricks+%7C+Delta+Lake+%7C+Key+Vault+;ADLS+Gen2+%7C+SQL+Database+%7C+Power+BI;Python+%7C+Snowflake+%7C+Airflow+%7C+DBT;3+yrs+of+Professional+Experience+%7C+Data+Engineer+%40+Accenture;Passionate+Data+Engineer+" alt="Typing SVG" /></a>
+</div>
+
+
+<p align="center">
+ <a href="https://www.linkedin.com/in/shubham-dalvi-21603316b" target="_blank">
+  <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="yourprofile"/>
+ </a>
+</p>
+<br />
+
+<!-- About Section -->
+# About Me
+
+<p>
+ <img align="right" width="350" src="/assets/programmer.gif" alt="Coding gif" />
+  
+ ✌️ &emsp; Enjoy solving data problems <br/><br/>
+ ❤️ &emsp; Passionate about big data technologies, cloud platforms, and data visualizations<br/><br/>
+ 📧 &emsp; Reach me: shubhamdworkmail@gmail.com<br/><br/>
+</p>
+
+<br/>
+
+
 # Airflow DBT Project
 
 A production-ready data pipeline using Apache Airflow and DBT for processing CFTC reports.
+
 ![image](https://github.com/user-attachments/assets/fc4842b6-7634-4514-a886-3eccc6f31022)
 
 ## Project Overview
