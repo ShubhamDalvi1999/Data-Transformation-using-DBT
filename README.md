@@ -1,4 +1,4 @@
-# Airflow DBT Workshop
+# Airflow DBT Project
 
 A production-ready data pipeline using Apache Airflow and DBT for processing CFTC reports.
 
