@@ -1,0 +1,10 @@
+.env
+/venv
+
+/Airflow/logs/*
+/Airflow/dags/__pycache__
+vagrant-setup/.vagrant
+
+/docs/*
+
+/dsec_dbt/dbt_packages/*

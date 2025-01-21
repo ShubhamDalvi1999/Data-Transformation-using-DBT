@@ -1,0 +1,51 @@
+version: 2
+
+models:
+  - name: 01_Refined_COT_Report
+    description: "Refined CFTC Report data"
+    columns:
+      - name: date
+        description: "Report date"
+        tests:
+          - not_null
+          - unique:
+              column_name: "date || '_' || commodity_name"  # Composite unique test
+      
+      - name: commodity_name
+        description: "Name of the commodity"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['WHEAT', 'CORN', 'SOYBEAN', 'SOYBEAN MEAL', 'SOYBEAN OIL']
+      
+      - name: pct_of_oi_noncomm_long_all
+        description: "Percentage of open interest non-commercial long all"
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 100
+      
+      - name: pct_of_oi_noncomm_short_all
+        description: "Percentage of open interest non-commercial short all"
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 100
+
+      - name: pct_of_oi_comm_long_all
+        description: "Percentage of open interest commercial long all"
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 100
+      
+      - name: pct_of_oi_comm_short_all
+        description: "Percentage of open interest commercial short all"
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 100 
