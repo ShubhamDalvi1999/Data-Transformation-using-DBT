@@ -1,5 +1,5 @@
 <h2 align="center">
-  Welcome to Azure Data Processing Project!
+  Welcome to Airflow DBT Project Project!
   <img src="https://media.giphy.com/media/hvRJCLFzcasrR4ia7z/giphy.gif" width="28">
 </h2>
 <!-- Intro  -->
