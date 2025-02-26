@@ -60,8 +60,11 @@ graph LR
     end
 
     subgraph Ingestion_DAGs[Data Ingestion Process]
-        B1[CFTC Weekly Position Loader<br/>PostgresHook + pandas<br/>to_sql replace strategy]
-        B2[Eurostat Price Loader<br/>requests + pandas<br/>to_sql replace strategy]
+        subgraph Hooks[Database Connection Layer]
+            H[PostgresHook<br/>Connection ID: db<br/>Manages DB Connections]
+        end
+        B1[CFTC Weekly Position Loader<br/>pandas DataFrame<br/>to_sql replace strategy]
+        B2[Eurostat Price Loader<br/>pandas DataFrame<br/>to_sql replace strategy]
     end
 
     subgraph Raw_Storage[PostgreSQL Raw Schema]
@@ -85,8 +88,10 @@ graph LR
 
     A1 --> B1
     A2 --> B2
-    B1 --> C1
-    B2 --> C2
+    B1 --> H
+    B2 --> H
+    H --> C1
+    H --> C2
     C1 --> D1
     C2 --> D2
     D1 --> Q
@@ -98,6 +103,7 @@ graph LR
     style A2 fill:#f9f,stroke:#333,stroke-width:2px
     style B1 fill:#bbf,stroke:#333,stroke-width:2px
     style B2 fill:#bbf,stroke:#333,stroke-width:2px
+    style H fill:#faa,stroke:#333,stroke-width:2px
     style C1 fill:#dfd,stroke:#333,stroke-width:2px
     style C2 fill:#dfd,stroke:#333,stroke-width:2px
     style D1 fill:#fdd,stroke:#333,stroke-width:2px
@@ -107,7 +113,7 @@ graph LR
     style F2 fill:#ffd,stroke:#333,stroke-width:2px
 
     classDef subgraphStyle fill:#fff,stroke:#333,stroke-width:2px
-    class External_APIs,Ingestion_DAGs,Raw_Storage,DBT_Transformations,Quality_Checks,Final_Result subgraphStyle
+    class External_APIs,Ingestion_DAGs,Raw_Storage,DBT_Transformations,Quality_Checks,Final_Result,Hooks subgraphStyle
 ```
 
 ## Project Overview
