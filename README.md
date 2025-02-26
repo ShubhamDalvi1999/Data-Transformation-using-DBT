@@ -60,8 +60,8 @@ graph LR
     end
 
     subgraph Ingestion_DAGs[Data Ingestion Process]
-        B1[CFTC Weekly Position Loader<br/>PostgresHook + pandas<br/>to_sql with replace]
-        B2[Eurostat Price Loader<br/>requests + pandas<br/>to_sql with replace]
+        B1[CFTC Weekly Position Loader<br/>PostgresHook + pandas<br/>to_sql replace strategy]
+        B2[Eurostat Price Loader<br/>requests + pandas<br/>to_sql replace strategy]
     end
 
     subgraph Raw_Storage[PostgreSQL Raw Schema]
@@ -75,10 +75,7 @@ graph LR
     end
 
     subgraph Quality_Checks[Data Quality]
-        Q1[Not Null Checks]
-        Q2[Range Validations]
-        Q3[Unique Keys]
-        Q4[Value Lists]
+        Q[Data Quality Gates<br/>- Not Null Checks<br/>- Range Validations<br/>- Unique Keys<br/>- Value Lists]
     end
 
     subgraph Final_Result[Analytics Ready Data]
@@ -92,12 +89,10 @@ graph LR
     B2 --> C2
     C1 --> D1
     C2 --> D2
-    
-    D1 --> Q1 & Q2 & Q3 & Q4
-    D2 --> Q1 & Q2 & Q3 & Q4
-    
-    Q1 & Q2 & Q3 & Q4 --> F1
-    Q1 & Q2 & Q3 & Q4 --> F2
+    D1 --> Q
+    D2 --> Q
+    Q --> F1
+    Q --> F2
 
     style A1 fill:#f9f,stroke:#333,stroke-width:2px
     style A2 fill:#f9f,stroke:#333,stroke-width:2px
@@ -107,10 +102,7 @@ graph LR
     style C2 fill:#dfd,stroke:#333,stroke-width:2px
     style D1 fill:#fdd,stroke:#333,stroke-width:2px
     style D2 fill:#fdd,stroke:#333,stroke-width:2px
-    style Q1 fill:#dff,stroke:#333,stroke-width:2px
-    style Q2 fill:#dff,stroke:#333,stroke-width:2px
-    style Q3 fill:#dff,stroke:#333,stroke-width:2px
-    style Q4 fill:#dff,stroke:#333,stroke-width:2px
+    style Q fill:#dff,stroke:#333,stroke-width:2px
     style F1 fill:#ffd,stroke:#333,stroke-width:2px
     style F2 fill:#ffd,stroke:#333,stroke-width:2px
 
