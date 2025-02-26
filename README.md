@@ -54,48 +54,50 @@ A production-ready data pipeline using Apache Airflow and DBT for processing CFT
 
 ```mermaid
 graph LR
-    subgraph External_APIs
-        A[Data Sources]
+    subgraph External_APIs[External APIs & File Formats]
+        A1[CFTC Trading Reports API<br/>.json<br/>Weekly Friday 3:30 PM ET]
+        A2[EU Agriculture Price API<br/>.xlsx<br/>Weekly Thursday 06:31 GMT]
     end
 
-    subgraph Ingestion_DAGs
-        B[Airflow DAGs]
+    subgraph Ingestion_DAGs[Data Ingestion Process]
+        B1[CFTC Weekly Position Loader<br/>PostgresHook + pandas<br/>to_sql with replace]
+        B2[Eurostat Price Loader<br/>requests + pandas<br/>to_sql with replace]
     end
 
-    subgraph Raw_Storage
-        C[PostgreSQL Raw Schema]
+    subgraph Raw_Storage[PostgreSQL Raw Schema]
+        C1[Raw Trading Positions<br/>05_COT_Legacy_Combined_Report<br/>Weekly Full Refresh]
+        C2[Raw Wheat Prices<br/>07_Eurostat_Wheat_Prices<br/>Weekly Full Refresh]
     end
 
-    subgraph DBT_Transformations
-        D[DBT Models]
+    subgraph DBT_Transformations[DBT Transformation Layer]
+        D1[Refined Trading Report<br/>01_Refined_COT_Report.sql<br/>Incremental delete+insert]
+        D2[Refined Price Data<br/>02_Refined_Eurostat.sql<br/>Full table refresh]
     end
 
-    subgraph Quality_Checks
-        E[Data Tests]
-    end
-
-    A --> B
-    B --> C
-    C --> D
-    D --> E
-
-    subgraph Data_Tests
-        Q1[Range Checks]
-        Q2[Null Checks]
+    subgraph Quality_Checks[Data Quality]
+        Q1[Not Null Checks]
+        Q2[Range Validations]
         Q3[Unique Keys]
         Q4[Value Lists]
     end
 
-    Q1 --> D
-    Q2 --> D
-    Q3 --> D
-    Q4 --> D
+    A1 & A2 --> B1 & B2
+    B1 & B2 --> C1 & C2
+    C1 & C2 --> D1 & D2
+    D1 & D2 --> Q1 & Q2 & Q3 & Q4
 
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style B fill:#bbf,stroke:#333,stroke-width:2px
-    style C fill:#dfd,stroke:#333,stroke-width:2px
-    style D fill:#fdd,stroke:#333,stroke-width:2px
-    style E fill:#dff,stroke:#333,stroke-width:2px
+    style A1 fill:#f9f,stroke:#333,stroke-width:2px
+    style A2 fill:#f9f,stroke:#333,stroke-width:2px
+    style B1 fill:#bbf,stroke:#333,stroke-width:2px
+    style B2 fill:#bbf,stroke:#333,stroke-width:2px
+    style C1 fill:#dfd,stroke:#333,stroke-width:2px
+    style C2 fill:#dfd,stroke:#333,stroke-width:2px
+    style D1 fill:#fdd,stroke:#333,stroke-width:2px
+    style D2 fill:#fdd,stroke:#333,stroke-width:2px
+    style Q1 fill:#dff,stroke:#333,stroke-width:2px
+    style Q2 fill:#dff,stroke:#333,stroke-width:2px
+    style Q3 fill:#dff,stroke:#333,stroke-width:2px
+    style Q4 fill:#dff,stroke:#333,stroke-width:2px
 
     classDef subgraphStyle fill:#fff,stroke:#333,stroke-width:2px
     class External_APIs,Ingestion_DAGs,Raw_Storage,DBT_Transformations,Quality_Checks subgraphStyle
