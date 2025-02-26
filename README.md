@@ -53,38 +53,43 @@ A production-ready data pipeline using Apache Airflow and DBT for processing CFT
 ## Data Flow
 
 ```mermaid
-graph TD
-    A[External Data Sources] --> B[Data Ingestion Layer]
-    B --> C[Raw Data Storage]
-    C --> D[Data Transformation Layer]
-    D --> E[Analytics Ready Data]
-
-    subgraph External_APIs[External APIs & File Formats]
-        A1[CFTC Trading Reports API<br/>.json<br/>Weekly Friday 3:30 PM ET] --> A
-        A2[EU Agriculture Price API<br/>.xlsx<br/>Weekly Thursday 06:31 GMT] --> A
+graph LR
+    subgraph External_APIs
+        A[Data Sources]
     end
 
-    subgraph Ingestion_DAGs[Data Ingestion Process]
-        B1[CFTC Weekly Position Loader<br/>PostgresHook + pandas<br/>to_sql with replace] --> B
-        B2[Eurostat Price Loader<br/>requests + pandas<br/>to_sql with replace] --> B
+    subgraph Ingestion_DAGs
+        B[Airflow DAGs]
     end
 
-    subgraph Raw_Storage[PostgreSQL Raw Schema]
-        C1[Raw Trading Positions<br/>05_COT_Legacy_Combined_Report<br/>Weekly Full Refresh] --> C
-        C2[Raw Wheat Prices<br/>07_Eurostat_Wheat_Prices<br/>Weekly Full Refresh] --> C
+    subgraph Raw_Storage
+        C[PostgreSQL Raw Schema]
     end
 
-    subgraph DBT_Transformations[DBT Transformation Layer]
-        D1[Refined Trading Report<br/>01_Refined_COT_Report.sql<br/>Incremental delete+insert] --> D
-        D2[Refined Price Data<br/>02_Refined_Eurostat.sql<br/>Full table refresh] --> D
+    subgraph DBT_Transformations
+        D[DBT Models]
     end
 
-    subgraph Quality_Checks[Data Quality]
-        Q1[Not Null Checks] --> D
-        Q2[Range Validations] --> D
-        Q3[Unique Keys] --> D
-        Q4[Value Lists] --> D
+    subgraph Quality_Checks
+        E[Data Tests]
     end
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+
+    subgraph Data_Tests
+        Q1[Range Checks]
+        Q2[Null Checks]
+        Q3[Unique Keys]
+        Q4[Value Lists]
+    end
+
+    Q1 --> D
+    Q2 --> D
+    Q3 --> D
+    Q4 --> D
 
     style A fill:#f9f,stroke:#333,stroke-width:2px
     style B fill:#bbf,stroke:#333,stroke-width:2px
