@@ -1,3 +1,6 @@
+# airflow-common is a template for the airflow container
+# it is used to define the airflow container and its dependencies
+# 
 x-airflow-common:
   &airflow-common
   build:

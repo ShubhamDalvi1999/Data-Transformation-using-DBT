@@ -191,6 +191,8 @@ def ingest_cftc_data():
         api_version='auto',
         auto_remove=True,
         docker_url='unix://var/run/docker.sock',
+        
+        # network_mode is used to connect the dbt container to the airflow container
         network_mode='docker_airflow_postgres-main_default',
         mounts = [Mount(
             source=dbt_project_dir, target="/dsec_dbt", type="bind")],

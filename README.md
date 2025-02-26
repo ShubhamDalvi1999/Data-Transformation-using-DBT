@@ -1,6 +1,54 @@
+<h2 align="center">
+  Welcome to Airflow DBT Project Project!
+  <img src="https://media.giphy.com/media/hvRJCLFzcasrR4ia7z/giphy.gif" width="28">
+</h2>
+<!-- Intro  -->
+<h3 align="center">
+        <samp>&gt; Hey There!, I am
+                <b><a target="_blank" href="https://yourwebsite.com">Shubham Dalvi</a></b>
+        </samp>
+</h3>
+
+<p align="center"> 
+  <samp>
+    <br>
+    「 I am a data engineer with a passion for big data, distributed computing, cloud solutions, and data visualization 」
+    <br>
+    <br>
+  </samp>
+</p>
+
+<div align="center">
+<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=1000&random=false&width=800&lines=Azure+Databricks+%7C+Delta+Lake+%7C+Key+Vault+;ADLS+Gen2+%7C+SQL+Database+%7C+Power+BI;Python+%7C+Snowflake+%7C+Airflow+%7C+DBT;3+yrs+of+Professional+Experience+%7C+Data+Engineer+%40+Accenture;Passionate+Data+Engineer+" alt="Typing SVG" /></a>
+</div>
+
+
+<p align="center">
+ <a href="https://www.linkedin.com/in/shubham-dalvi-21603316b" target="_blank">
+  <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="yourprofile"/>
+ </a>
+</p>
+<br />
+
+<!-- About Section -->
+# About Me
+
+<p>
+ <img align="right" width="350" src="/assets/programmer.gif" alt="Coding gif" />
+  
+ ✌️ &emsp; Enjoy solving data problems <br/><br/>
+ ❤️ &emsp; Passionate about big data technologies, cloud platforms, and data visualizations<br/><br/>
+ 📧 &emsp; Reach me: shubhamdworkmail@gmail.com<br/><br/>
+</p>
+
+<br/>
+
+
 # Airflow DBT Project
 
 A production-ready data pipeline using Apache Airflow and DBT for processing CFTC reports.
+
+![image](https://github.com/user-attachments/assets/fc4842b6-7634-4514-a886-3eccc6f31022)
 
 ## Project Overview
 
@@ -16,6 +64,42 @@ This project implements an automated data pipeline that:
 - **DBT**: Handles data transformation and testing
 - **PostgreSQL**: Stores both raw and transformed data
 - **Docker**: Containerizes all services for consistent deployment
+
+## Data Flow
+
+```mermaid
+graph TD
+    A[Data Sources] --> B[Airflow DAGs]
+    B --> C[Raw Schema]
+    C --> D[DBT Transformations]
+    D --> E[Refined Schema]
+
+    subgraph Sources
+        A1[CFTC API] --> A
+        A2[Eurostat API] --> A
+    end
+
+    subgraph DAGs
+        B1[01_ingest_cftc_report.py] --> B
+        B2[02_ingest_eurostat_prices.py] --> B
+    end
+
+    subgraph Raw_Tables
+        C1[raw.05_COT_Legacy_Combined_Report] --> C
+        C2[raw.07_Eurostat_Wheat_Prices] --> C
+    end
+
+    subgraph DBT_Models
+        D1[01_Refined_COT_Report.sql] --> D
+        D2[02_Refined_Eurostat.sql] --> D
+    end
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style B fill:#bbf,stroke:#333,stroke-width:2px
+    style C fill:#dfd,stroke:#333,stroke-width:2px
+    style D fill:#fdd,stroke:#333,stroke-width:2px
+    style E fill:#dff,stroke:#333,stroke-width:2px
+```
 
 ## Prerequisites
 

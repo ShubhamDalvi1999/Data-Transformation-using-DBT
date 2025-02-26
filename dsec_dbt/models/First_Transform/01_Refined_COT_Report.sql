@@ -1,7 +1,11 @@
+-- This model is used to refine the COT (Commitments of Traders) report data 
+-- by removing unnecessary columns and adding a unique key for the date and commodity name.
+-- It is also used to filter the data for a specific commodity, in this case, wheat.    
+
 {{ config(
-    materialized='incremental',
-    unique_key=['date', 'commodity_name'],
-    incremental_strategy='delete+insert'
+    materialized='incremental', -- Incremental strategy is used to update the data in the table
+    unique_key=['date', 'commodity_name'], -- Unique key is used to ensure that the data is unique
+    incremental_strategy='delete+insert' -- Incremental strategy is used to update the data in the table
 ) }}
 
 {# Documentation for the model #}
