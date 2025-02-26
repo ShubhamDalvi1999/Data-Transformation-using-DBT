@@ -59,24 +59,24 @@ graph TD
     C --> D[Data Transformation Layer]
     D --> E[Analytics Ready Data]
 
-    subgraph External_APIs
-        A1[CFTC Trading Reports API] --> A
-        A2[EU Agriculture Price API] --> A
+    subgraph External_APIs[External APIs & File Formats]
+        A1[CFTC Trading Reports API<br/>.json] --> A
+        A2[EU Agriculture Price API<br/>.xlsx] --> A
     end
 
-    subgraph Ingestion_DAGs
-        B1[CFTC Weekly Position Loader] --> B
-        B2[Eurostat Price Loader] --> B
+    subgraph Ingestion_DAGs[Airflow DAG Files]
+        B1[CFTC Weekly Position Loader<br/>ingest_cftc_report.py] --> B
+        B2[Eurostat Price Loader<br/>ingest_eurostat_prices.py] --> B
     end
 
-    subgraph Raw_Storage
-        C1[Raw Trading Positions] --> C
-        C2[Raw Wheat Prices] --> C
+    subgraph Raw_Storage[PostgreSQL Raw Tables]
+        C1[Raw Trading Positions<br/>05_COT_Legacy_Combined_Report] --> C
+        C2[Raw Wheat Prices<br/>07_Eurostat_Wheat_Prices] --> C
     end
 
-    subgraph DBT_Transformations
-        D1[Refined Trading Report] --> D
-        D2[Refined Price Data] --> D
+    subgraph DBT_Transformations[DBT SQL Models]
+        D1[Refined Trading Report<br/>01_Refined_COT_Report.sql] --> D
+        D2[Refined Price Data<br/>02_Refined_Eurostat.sql] --> D
     end
 
     style A fill:#f9f,stroke:#333,stroke-width:2px
@@ -84,6 +84,9 @@ graph TD
     style C fill:#dfd,stroke:#333,stroke-width:2px
     style D fill:#fdd,stroke:#333,stroke-width:2px
     style E fill:#dff,stroke:#333,stroke-width:2px
+
+    classDef subgraphStyle fill:#fff,stroke:#333,stroke-width:2px
+    class External_APIs,Ingestion_DAGs,Raw_Storage,DBT_Transformations subgraphStyle
 ```
 
 ## Project Overview
