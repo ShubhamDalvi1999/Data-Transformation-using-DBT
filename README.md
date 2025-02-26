@@ -50,21 +50,6 @@ A production-ready data pipeline using Apache Airflow and DBT for processing CFT
 
 ![image](https://github.com/user-attachments/assets/fc4842b6-7634-4514-a886-3eccc6f31022)
 
-## Project Overview
-
-This project implements an automated data pipeline that:
-1. Ingests CFTC (Commodity Futures Trading Commission) report data
-2. Processes and transforms the data using DBT
-3. Runs data quality tests
-4. Manages the entire workflow using Apache Airflow
-
-## Architecture
-
-- **Apache Airflow**: Orchestrates the entire data pipeline
-- **DBT**: Handles data transformation and testing
-- **PostgreSQL**: Stores both raw and transformed data
-- **Docker**: Containerizes all services for consistent deployment
-
 ## Data Flow
 
 ```mermaid
@@ -100,6 +85,23 @@ graph TD
     style D fill:#fdd,stroke:#333,stroke-width:2px
     style E fill:#dff,stroke:#333,stroke-width:2px
 ```
+
+## Project Overview
+
+This project implements an automated data pipeline that:
+1. Ingests CFTC (Commodity Futures Trading Commission) report data
+2. Processes and transforms the data using DBT
+3. Runs data quality tests
+4. Manages the entire workflow using Apache Airflow
+
+## Architecture
+
+- **Apache Airflow**: Orchestrates the entire data pipeline
+- **DBT**: Handles data transformation and testing
+- **PostgreSQL**: Stores both raw and transformed data
+- **Docker**: Containerizes all services for consistent deployment
+
+
 
 ## Prerequisites
 
