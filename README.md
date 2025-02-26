@@ -19,7 +19,7 @@
 </p>
 
 <div align="center">
-<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=1000&random=false&width=800&lines=Azure+Databricks+%7C+Delta+Lake+%7C+Key+Vault+;ADLS+Gen2+%7C+SQL+Database+%7C+Power+BI;Python+%7C+Snowflake+%7C+Airflow+%7C+DBT;3+yrs+of+Professional+Experience+%7C+Data+Engineer+%40+Accenture;Passionate+Data+Engineer+" alt="Typing SVG" /></a>
+<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=1000&random=false&width=800&lines=Azure+Databricks+%7C+Delta+Lake+%7C+Key+Vault;ADLS+Gen2+%7C+SQL+Database+%7C+Power+BI;Python+%7C+Snowflake+%7C+Airflow+%7C+DBT;3+yrs+of+Professional+Experience+%7C+Data+Engineer+%40+Accenture;Passionate+Data+Engineer+" alt="Typing SVG" /></a>
 </div>
 
 
@@ -54,29 +54,29 @@ A production-ready data pipeline using Apache Airflow and DBT for processing CFT
 
 ```mermaid
 graph TD
-    A[Data Sources] --> B[Airflow DAGs]
-    B --> C[Raw Schema]
-    C --> D[DBT Transformations]
-    D --> E[Refined Schema]
+    A[External Data Sources] --> B[Data Ingestion Layer]
+    B --> C[Raw Data Storage]
+    C --> D[Data Transformation Layer]
+    D --> E[Analytics Ready Data]
 
-    subgraph Sources
-        A1[CFTC API] --> A
-        A2[Eurostat API] --> A
+    subgraph External_APIs
+        A1[CFTC Trading Reports API] --> A
+        A2[EU Agriculture Price API] --> A
     end
 
-    subgraph DAGs
-        B1[01_ingest_cftc_report.py] --> B
-        B2[02_ingest_eurostat_prices.py] --> B
+    subgraph Ingestion_DAGs
+        B1[CFTC Weekly Position Loader] --> B
+        B2[Eurostat Price Loader] --> B
     end
 
-    subgraph Raw_Tables
-        C1[raw.05_COT_Legacy_Combined_Report] --> C
-        C2[raw.07_Eurostat_Wheat_Prices] --> C
+    subgraph Raw_Storage
+        C1[Raw Trading Positions] --> C
+        C2[Raw Wheat Prices] --> C
     end
 
-    subgraph DBT_Models
-        D1[01_Refined_COT_Report.sql] --> D
-        D2[02_Refined_Eurostat.sql] --> D
+    subgraph DBT_Transformations
+        D1[Refined Trading Report] --> D
+        D2[Refined Price Data] --> D
     end
 
     style A fill:#f9f,stroke:#333,stroke-width:2px
