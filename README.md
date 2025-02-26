@@ -81,10 +81,23 @@ graph LR
         Q4[Value Lists]
     end
 
-    A1 & A2 --> B1 & B2
-    B1 & B2 --> C1 & C2
-    C1 & C2 --> D1 & D2
-    D1 & D2 --> Q1 & Q2 & Q3 & Q4
+    subgraph Final_Result[Analytics Ready Data]
+        F1[Refined CFTC Trading Data<br/>With Position Percentages]
+        F2[Refined EU Wheat Prices<br/>Hamburg Exchange Focus]
+    end
+
+    A1 --> B1
+    A2 --> B2
+    B1 --> C1
+    B2 --> C2
+    C1 --> D1
+    C2 --> D2
+    
+    D1 --> Q1 & Q2 & Q3 & Q4
+    D2 --> Q1 & Q2 & Q3 & Q4
+    
+    Q1 & Q2 & Q3 & Q4 --> F1
+    Q1 & Q2 & Q3 & Q4 --> F2
 
     style A1 fill:#f9f,stroke:#333,stroke-width:2px
     style A2 fill:#f9f,stroke:#333,stroke-width:2px
@@ -98,9 +111,11 @@ graph LR
     style Q2 fill:#dff,stroke:#333,stroke-width:2px
     style Q3 fill:#dff,stroke:#333,stroke-width:2px
     style Q4 fill:#dff,stroke:#333,stroke-width:2px
+    style F1 fill:#ffd,stroke:#333,stroke-width:2px
+    style F2 fill:#ffd,stroke:#333,stroke-width:2px
 
     classDef subgraphStyle fill:#fff,stroke:#333,stroke-width:2px
-    class External_APIs,Ingestion_DAGs,Raw_Storage,DBT_Transformations,Quality_Checks subgraphStyle
+    class External_APIs,Ingestion_DAGs,Raw_Storage,DBT_Transformations,Quality_Checks,Final_Result subgraphStyle
 ```
 
 ## Project Overview
