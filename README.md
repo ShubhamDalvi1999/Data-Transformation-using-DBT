@@ -60,23 +60,30 @@ graph TD
     D --> E[Analytics Ready Data]
 
     subgraph External_APIs[External APIs & File Formats]
-        A1[CFTC Trading Reports API<br/>.json] --> A
-        A2[EU Agriculture Price API<br/>.xlsx] --> A
+        A1[CFTC Trading Reports API<br/>.json<br/>Weekly Friday 3:30 PM ET] --> A
+        A2[EU Agriculture Price API<br/>.xlsx<br/>Weekly Thursday 06:31 GMT] --> A
     end
 
-    subgraph Ingestion_DAGs[Airflow DAG Files]
-        B1[CFTC Weekly Position Loader<br/>ingest_cftc_report.py] --> B
-        B2[Eurostat Price Loader<br/>ingest_eurostat_prices.py] --> B
+    subgraph Ingestion_DAGs[Data Ingestion Process]
+        B1[CFTC Weekly Position Loader<br/>PostgresHook + pandas<br/>to_sql with replace] --> B
+        B2[Eurostat Price Loader<br/>requests + pandas<br/>to_sql with replace] --> B
     end
 
-    subgraph Raw_Storage[PostgreSQL Raw Tables]
-        C1[Raw Trading Positions<br/>05_COT_Legacy_Combined_Report] --> C
-        C2[Raw Wheat Prices<br/>07_Eurostat_Wheat_Prices] --> C
+    subgraph Raw_Storage[PostgreSQL Raw Schema]
+        C1[Raw Trading Positions<br/>05_COT_Legacy_Combined_Report<br/>Weekly Full Refresh] --> C
+        C2[Raw Wheat Prices<br/>07_Eurostat_Wheat_Prices<br/>Weekly Full Refresh] --> C
     end
 
-    subgraph DBT_Transformations[DBT SQL Models]
-        D1[Refined Trading Report<br/>01_Refined_COT_Report.sql] --> D
-        D2[Refined Price Data<br/>02_Refined_Eurostat.sql] --> D
+    subgraph DBT_Transformations[DBT Transformation Layer]
+        D1[Refined Trading Report<br/>01_Refined_COT_Report.sql<br/>Incremental delete+insert] --> D
+        D2[Refined Price Data<br/>02_Refined_Eurostat.sql<br/>Full table refresh] --> D
+    end
+
+    subgraph Quality_Checks[Data Quality]
+        Q1[Not Null Checks] --> D
+        Q2[Range Validations] --> D
+        Q3[Unique Keys] --> D
+        Q4[Value Lists] --> D
     end
 
     style A fill:#f9f,stroke:#333,stroke-width:2px
@@ -86,7 +93,7 @@ graph TD
     style E fill:#dff,stroke:#333,stroke-width:2px
 
     classDef subgraphStyle fill:#fff,stroke:#333,stroke-width:2px
-    class External_APIs,Ingestion_DAGs,Raw_Storage,DBT_Transformations subgraphStyle
+    class External_APIs,Ingestion_DAGs,Raw_Storage,DBT_Transformations,Quality_Checks subgraphStyle
 ```
 
 ## Project Overview
@@ -96,6 +103,100 @@ This project implements an automated data pipeline that:
 2. Processes and transforms the data using DBT
 3. Runs data quality tests
 4. Manages the entire workflow using Apache Airflow
+
+## Data Sources
+
+### 1. CFTC Trading Reports
+- **Source**: CFTC Public API (publicreporting.cftc.gov)
+- **Data Type**: Commitments of Traders (COT) Reports
+- **Format**: JSON via Socrata API
+- **Update Frequency**: Weekly (Every Friday at 3:30 PM Eastern)
+- **Raw Table**: `raw.05_COT_Legacy_Combined_Report`
+- **Content**: Trading positions data including:
+  - Commercial and non-commercial positions
+  - Long and short percentages
+  - Open interest statistics
+  - Focus on wheat, corn, and soybean markets
+
+### 2. Eurostat Agricultural Prices
+- **Source**: European Commission Agriculture Portal
+- **Data Type**: EU Wheat Price Data
+- **Format**: Excel (.xlsx) file
+- **Update Frequency**: Weekly (Every Thursday at 06:31 London time)
+- **Raw Table**: `raw.07_Eurostat_Wheat_Prices`
+- **Content**: Agricultural commodity prices including:
+  - Regional wheat prices across EU
+  - Price points from major trading hubs
+  - Historical price trends
+  - Focus on Hamburg exchange prices
+
+## PostgreSQL Data Population
+
+### Raw Data Ingestion
+
+1. **CFTC Trading Positions (`raw.05_COT_Legacy_Combined_Report`)**:
+   ```python
+   # Using Airflow's PostgresHook and pandas
+   postgres_hook = PostgresHook(postgres_conn_id="db")
+   df = pd.DataFrame.from_records(cftc_api_results)
+   df.to_sql('05_COT_Legacy_Combined_Report', 
+             postgres_hook.get_sqlalchemy_engine(),
+             schema='raw',
+             if_exists='replace',
+             index=False)
+   ```
+   - Fetched via Socrata API client
+   - Transformed to pandas DataFrame
+   - Bulk loaded using SQLAlchemy engine
+   - Replace strategy for weekly updates
+
+2. **Eurostat Prices (`raw.07_Eurostat_Wheat_Prices`)**:
+   ```python
+   # Using requests and pandas
+   response = requests.get(eurostat_url)
+   df = pd.read_excel(BytesIO(response.content))
+   df.to_sql('07_Eurostat_Wheat_Prices',
+             postgres_hook.get_sqlalchemy_engine(),
+             schema='raw',
+             if_exists='replace',
+             index=False)
+   ```
+   - Downloads Excel file via HTTP
+   - Direct Excel to DataFrame conversion
+   - Bulk loaded using SQLAlchemy engine
+   - Replace strategy for weekly updates
+
+### DBT Transformations
+
+1. **Refined Trading Report (`public.01_Refined_COT_Report`)**:
+   ```sql
+   -- Incremental model with delete+insert strategy
+   {{ config(
+       materialized='incremental',
+       unique_key=['date', 'commodity_name'],
+       incremental_strategy='delete+insert'
+   ) }}
+   ```
+   - Implements incremental loading
+   - Ensures data uniqueness
+   - Handles historical updates
+
+2. **Refined Price Data (`public.02_Refined_Eurostat`)**:
+   ```sql
+   -- Full refresh table materialization
+   {{ config(
+       materialized='table'
+   ) }}
+   ```
+   - Complete table refresh
+   - Filters for specific price points
+   - Focuses on Hamburg exchange data
+
+### Data Quality Checks
+- Not null constraints
+- Value range validations (0-100 for percentages)
+- Unique composite keys
+- Accepted value lists for commodities
 
 ## Architecture
 
@@ -404,6 +505,4 @@ All services include health checks:
 ## Support
 
 For issues and questions:
-- Check the debugging guide in `docs/debugging_steps.md`
-- Review Docker commands in `docs/docker_commands.md`
-- Submit an issue in the repository
+- Check the debugging guide in `
